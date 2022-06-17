@@ -3,40 +3,36 @@ module.exports = function toReadable (number) {
   let tens = ['eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
   let w_tens = ['ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
 
-  let res ='';
-
-  if(number <= 10) {
-    return ones[number];
+  number = number.toString().split('');
+  if(number.length == 1) {
+    return ones[number[0]];
   }
-  if(number < 20 && number > 10) {
-    return tens[number - 11];
-  }
-  if(number >= 20 && number < 100) {
-    if(number % 10 == 0) {
-      res = w_tens[Math.trunc(number / 10)-1];
+  else if(number.length == 2) {
+    if(number[1] == '0') {
+      return w_tens[number[0]-1];
+    }
+    else if(number[1] != '0' && number[0] < 2) {
+      return tens[number[1]-1];
     }
     else {
-      res = w_tens[Math.trunc(number / 10)-1] + ' ' + ones[(number - Math.trunc(number / 10) * 10)];
+      return w_tens[number[0]-1] + ' ' + ones[number[1]];
     }
-    return res;
   }
-
-  if(number >= 100) {
-    if(number % 100 == 0) {
-      res = ones[Math.trunc(number / 100)] + ' hundred';
+  else {
+    if(number[2] == '0' && number[1] == '0') {
+      return ones[number[0]] + ' hundred';
     }
-    if(number % 10 == 0 && number % 100 != 0) {
-      res = ones[Math.trunc(number / 100)] + ' hundred ' + w_tens[(number - (Math.trunc(number / 100) * 100)) / 10 - 1];
+    else if(number[2] == '0' && number[1] != '0') {
+      return ones[number[0]] + ' hundred ' + w_tens[number[1]-1];
     }
-    if(number - (Math.trunc(number / 100) * 100) < 20 && number - (Math.trunc(number / 100) * 100) > 10) {
-      res = ones[Math.trunc(number / 100)] + ' hundred ' + tens[(number - (Math.trunc(number / 100) * 100)) - 11];
+    else if (number[2] != '0' && number[1] < 2 && number[1] != '0') {
+      return ones[number[0]] + ' hundred ' + tens[number[2]-1];
     }
-    if (number - (Math.trunc(number / 100) * 100) > 20 && number % 10 != 0) {
-      res = ones[Math.trunc(number / 100)] + ' hundred ' + w_tens[Math.trunc((number - (Math.trunc(number / 100) * 100)) / 10) - 1] + ' ' + ones[(number - (Math.trunc(number / 10) * 10))];
+    else if(number[2] != '0' && number[1] == '0') {
+      return ones[number[0]] + ' hundred ' + ones[number[2]];
     }
-    if(number - (Math.trunc(number / 100) * 100) <= 10 && number % 100 != 0) {
-      res = ones[Math.trunc(number / 100)] + ' hundred ' + ones[number - (Math.trunc(number / 100) * 100)];
+    else {
+      return ones[number[0]] + ' hundred ' + w_tens[number[1]-1] + ' ' + ones[number[2]];
     }
-    return res;
   }
 }
